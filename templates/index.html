@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Clientes {% endblock %}</h1>
+    {% for cliente in clientes %}
+        <a href="{{ url_for('cliente', cliente_id=cliente['id']) }}">
+            <h2>{{ cliente['nome'] }}</h2>
+        </a>
+        <span class="badge badge-primary">{{ cliente['telefone'] }}</span>
+        <span class="badge badge-primary">{{ cliente['cidade'] }}</span>
+        <a href="{{ url_for('edit', cliente_id=cliente['id']) }}">
+            <span class="badge badge-warning">Editar</span>
+        </a>
+        <hr>
+    {% endfor %}
+{% endblock %}

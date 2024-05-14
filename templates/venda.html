@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>{% block title %} {{ venda['datahora'] }} {% endblock %}</h2>
+    <p>Cliente: {{ venda['cliente'] }}</p>
+    <p>Produto:  {{ venda['produto'] }}</p>
+    <p>Quantidade:  {{ venda['qtde'] }}</p>
+    <p>Pago:  {{ venda['pago'] }}</p>
+    <p>Entregue:  {{ venda['entregue'] }}</p>
+{% endblock %}

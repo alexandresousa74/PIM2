@@ -9,7 +9,7 @@ database_file = "sqlite:///{}".format(os.path.join(project_dir, "database.db"))
 
 app = Flask('__name__')
 app.config["SQLALCHEMY_DATABASE_URI"] = database_file
-app.config['SECRET_KEY'] = 'your secret key'
+app.config['SECRET_KEY'] = 'V$3423faghYtGs'
 
 db = SQLAlchemy(app)
 
@@ -21,7 +21,7 @@ class Clientes(db.Model):
 
 class Vendas(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    datahora = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    datahora = db.Column(db.DateTime, default=datetime.datetime.now)
     cliente = db.Column(db.String(80), nullable=False)
     produto = db.Column(db.String(30), nullable=False)
     qtde = db.Column(db.Integer, nullable=False)
@@ -39,8 +39,18 @@ class Produtos(db.Model):
 
 @app.route('/')
 def index():
+    vendas = Vendas.query.all()
+    return render_template('index.html', vendas = vendas)
+
+@app.route('/clientes')
+def clientes():
     clientes = Clientes.query.all()
-    return render_template('index.html', clientes = clientes)
+    return render_template('clientes.html', clientes = clientes)
+
+@app.route('/produtos')
+def produtos():
+    produtos = Produtos.query.all()
+    return render_template('produtos.html', produtos = produtos)
 
 def get_cliente(cliente_id):
     cliente = Clientes.query.filter_by(id=cliente_id).first()
@@ -48,13 +58,35 @@ def get_cliente(cliente_id):
         abort(404)
     return cliente
 
-@app.route('/<int:cliente_id>')
+def get_venda(venda_id):
+    venda = Vendas.query.filter_by(id=venda_id).first()
+    if venda is None:
+        abort(404)
+    return venda
+
+def get_produto(produto_id):
+    produto = Produtos.query.filter_by(id=produto_id).first()
+    if produto is None:
+        abort(404)
+    return produto
+
+@app.route('/vendas/<int:venda_id>')
+def venda(venda_id):
+    venda = get_venda(venda_id)
+    return render_template('venda.html', venda = venda)
+
+@app.route('/clientes/<int:cliente_id>')
 def cliente(cliente_id):
     cliente = get_cliente(cliente_id)
     return render_template('cliente.html', cliente = cliente)
 
-@app.route('/create', methods=('GET', 'POST'))
-def create():
+@app.route('/produtos/<int:produto_id>')
+def produto(produto_id):
+    produto = get_produto(produto_id)
+    return render_template('produto.html', produto = produto)
+
+@app.route('/novo_cliente', methods=('GET', 'POST'))
+def novo_cliente():
     if request.method == 'POST':
         nome = request.form['nome']
         telefone = request.form['telefone']
@@ -66,11 +98,45 @@ def create():
             cliente = Clientes(nome=nome, telefone=telefone, cidade=cidade)
             db.session.add(cliente)
             db.session.commit()
-            return redirect(url_for('index'))
+            return redirect(url_for('clientes'))
     return render_template('novo_cliente.html')
 
-@app.route('/<int:cliente_id>/edit', methods=('GET', 'POST'))
-def edit(cliente_id):
+@app.route('/nova_venda', methods=('GET', 'POST'))
+def nova_venda():
+    if request.method == 'POST':
+        cliente = request.form['cliente']
+        produto = request.form['produto']
+        qtde = request.form['qtde']
+        pago = request.form['pago']
+        entregue = request.form['entregue']
+
+        if not cliente or not produto:
+            flash('Digite o nome do cliente e do produto!')
+        else:
+            venda = Vendas(cliente=cliente, produto=produto, qtde=qtde, pago=pago, entregue=entregue)
+            db.session.add(venda)
+            db.session.commit()
+            return redirect(url_for('index'))
+    return render_template('nova_venda.html')
+
+@app.route('/novo_produto', methods=('GET', 'POST'))
+def novo_produto():
+    if request.method == 'POST':
+        nome = request.form['nome']
+        telefone = request.form['telefone']
+        cidade = request.form['cidade']
+
+        if not nome:
+            flash('Digite o nome do cliente!')
+        else:
+            cliente = Clientes(nome=nome, telefone=telefone, cidade=cidade)
+            db.session.add(cliente)
+            db.session.commit()
+            return redirect(url_for('produtos'))
+    return render_template('novo_produto.html')
+
+@app.route('/clientes/<int:cliente_id>/edit', methods=('GET', 'POST'))
+def edit_cliente(cliente_id):
     cliente = get_cliente(cliente_id)
 
     if request.method == 'POST':
@@ -85,14 +151,46 @@ def edit(cliente_id):
             cliente.telefone = telefone
             cliente.cidade = cidade
             db.session.commit()
-            return redirect(url_for('index'))
+            return redirect(url_for('clientes'))
 
     return render_template('edit_cliente.html', cliente=cliente)
 
-@app.route('/<int:cliente_id>/delete', methods=('POST',))
-def delete(cliente_id):
+@app.route('/clientes/<int:cliente_id>/delete', methods=('POST',))
+def delete_cliente(cliente_id):
     cliente = get_cliente(cliente_id)
     db.session.delete(cliente)
     db.session.commit()
     flash('"{}" foi apagado com sucesso!'.format(cliente.nome))
+    return redirect(url_for('clientes'))
+
+@app.route('/vendas/<int:venda_id>/edit', methods=('GET', 'POST'))
+def edit_venda(venda_id):
+    venda = get_venda(venda_id)
+
+    if request.method == 'POST':
+        cliente = request.form['cliente']
+        produto = request.form['produto']
+        qtde = request.form['qtde']
+        pago = request.form['pago']
+        entregue = request.form['entregue']
+
+        if not cliente or not produto:
+            flash('Digite o nome do cliente e do produto!')
+        else:
+            venda.cliente=cliente
+            venda.produto=produto
+            venda.qtde=qtde
+            venda.pago=pago
+            venda.entregue=entregue
+            db.session.commit()
+            return redirect(url_for('index'))
+
+    return render_template('edit_venda.html', venda=venda)
+
+@app.route('/<int:venda_id>/delete', methods=('POST',))
+def delete_venda(venda_id):
+    venda = get_venda(venda_id)
+    db.session.delete(venda)
+    db.session.commit()
+    flash('"{}" foi apagado com sucesso!'.format(venda.datahora))
     return redirect(url_for('index'))

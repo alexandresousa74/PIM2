@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Produtos {% endblock %}</h1>
+    <a href="{{url_for('novo_produto')}}" class="btn btn-primary">Novo Produto</a>
+    {% for produto in produtos %}
+        <a href="{{ url_for('produto', produto_id=produto['id']) }}">
+            <h2>{{ produto['descricao'] }}</h2>
+        </a>
+        <span class="badge badge-primary">{{ produto['sabor'] }}</span>
+        <span class="badge badge-primary">{{ produto['valor_venda'] }}</span>
+        <a href="#">
+            <span class="badge badge-warning">Editar</span>
+        </a>
+        <hr>
+    {% endfor %}
+{% endblock %}

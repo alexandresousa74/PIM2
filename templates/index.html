@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} Clientes {% endblock %}</h1>
-    {% for cliente in clientes %}
-        <a href="{{ url_for('cliente', cliente_id=cliente['id']) }}">
-            <h2>{{ cliente['nome'] }}</h2>
+    <h1>{% block title %} Vendas {% endblock %}</h1>
+    <a href="{{url_for('nova_venda')}}" class="btn btn-primary">Nova Venda</a>
+    {% for venda in vendas %}
+        <a href="{{ url_for('venda', venda_id=venda['id']) }}">
+            <h2>{{ venda['datahora'] }}</h2>
         </a>
-        <span class="badge badge-primary">{{ cliente['telefone'] }}</span>
-        <span class="badge badge-primary">{{ cliente['cidade'] }}</span>
-        <a href="{{ url_for('edit', cliente_id=cliente['id']) }}">
+        <span class="badge badge-primary">{{ venda['cliente'] }}</span>
+        <span class="badge badge-primary">{{ venda['produto'] }}</span>
+        <a href="{{ url_for('edit_venda', venda_id=venda['id']) }}">
             <span class="badge badge-warning">Editar</span>
         </a>
         <hr>

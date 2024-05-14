@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{% block title %} Editar "{{ venda['datahora'] }}" {% endblock %}</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label for="cliente">Nome do Cliente</label>
+        <input type="text" name="cliente" placeholder="Nome do Cliente"
+               class="form-control"
+               value="{{ request.form['cliente'] or venda['cliente'] }}">
+        </input>
+    </div>
+
+    <div class="form-group">
+        <label for="produto">Nome do Produto</label>
+        <input type="text" name="produto" placeholder="Nome do Produto"
+               class="form-control"
+               value="{{ request.form['produto'] or venda['produto'] }}">
+        </input>
+    </div>
+
+    <div class="form-group">
+        <label for="qtde">Quantidade</label>
+        <input type="number" name="qtde" 
+               placeholder="Quantidade" class="form-control"
+               value="{{ request.form['qtde']  or venda['qtde'] }}"></input>
+    </div>
+
+    <div class="form-group">
+        <label for="pago">Pago</label>
+        <input type="text" name="pago" 
+               placeholder="sim ou não" class="form-control"
+               value="{{ request.form['pago']  or venda['pago'] }}"></input>
+    </div>
+
+    <div class="form-group">
+        <label for="entregue">Entregue</label>
+        <input type="text" name="entregue" 
+               placeholder="sim ou não" class="form-control"
+               value="{{ request.form['entregue']  or venda['entregue'] }}"></input>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+    </div>
+</form>
+<hr>
+<form action="{{ url_for('delete_venda', venda_id=venda['id']) }}" method="POST">
+    <input type="submit" value="Apagar"
+            class="btn btn-danger btn-sm"
+            onclick="return confirm('Tem certeza que deseja excluir essa venda?')">
+</form>
+
+{% endblock %}

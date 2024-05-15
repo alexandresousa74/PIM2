@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>{% block title %} {{ produto['descricao'] }} {% endblock %}</h2>
+    <p>Peso (g): {{ produto['peso'] }}</p>
+    <p>Volume (ml):  {{ produto['volume'] }}</p>
+    <p>Sabor:  {{ produto['sabor'] }}</p>
+    <p>Valor de Custo:  {{ produto['valor_custo'] }}</p>
+    <p>Valor de Venda:  {{ produto['valor_venda'] }}</p>
+    <a href="{{ url_for('edit_produto', produto_id=produto['id']) }}">
+        <span class="badge badge-warning">Editar</span>
+    </a>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{% block title %} Adicionar um Novo Produto {% endblock %}</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label for="descricao">Descrição do Produto</label>
+        <input type="text" name="descricao"
+               placeholder="Descrição do Produto" class="form-control"
+               value="{{ request.form['descricao'] }}"></input>
+    </div>
+
+    <div class="form-group">
+        <label for="peso">Peso (g)</label>
+        <input type="number" name="peso" 
+               placeholder="Peso em gramas" class="form-control"
+               value="{{ request.form['peso'] }}"></input>
+    </div>
+
+    <div class="form-group">
+        <label for="volume">Volume (ml)</label>
+        <input type="number" name="volume" 
+               placeholder="Volume em ml" class="form-control"
+               value="{{ request.form['volume'] }}"></input>
+    </div>
+
+    <div class="form-group">
+        <label for="sabor">Sabor</label>
+        <input type="text" name="sabor" 
+               placeholder="Sabor" class="form-control"
+               value="{{ request.form['sabor'] }}"></input>
+    </div>
+
+    <div class="form-group">
+        <label for="valor_custo">Valor de Custo</label>
+        <input type="text" name="valor_custo" 
+               placeholder="Valor de Custo" class="form-control"
+               value="{{ request.form['valor_custo'] }}"></input>
+    </div>
+
+    <div class="form-group">
+        <label for="valor_venda">Valor de Venda</label>
+        <input type="text" name="valor_venda" 
+               placeholder="Valor de Venda" class="form-control"
+               value="{{ request.form['valor_venda'] }}"></input>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+    </div>
+</form>
+{% endblock %}

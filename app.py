@@ -122,15 +122,18 @@ def nova_venda():
 @app.route('/novo_produto', methods=('GET', 'POST'))
 def novo_produto():
     if request.method == 'POST':
-        nome = request.form['nome']
-        telefone = request.form['telefone']
-        cidade = request.form['cidade']
+        descricao = request.form['descricao']
+        peso = request.form['peso']
+        volume = request.form['volume']
+        sabor = request.form['sabor']
+        valor_custo = request.form['valor_custo']
+        valor_venda = request.form['valor_venda']
 
-        if not nome:
-            flash('Digite o nome do cliente!')
+        if not descricao:
+            flash('Digite a descrição do produto!')
         else:
-            cliente = Clientes(nome=nome, telefone=telefone, cidade=cidade)
-            db.session.add(cliente)
+            produto = Produtos(descricao=descricao, peso=peso, volume=volume, sabor=sabor, valor_custo=valor_custo, valor_venda=valor_venda)
+            db.session.add(produto)
             db.session.commit()
             return redirect(url_for('produtos'))
     return render_template('novo_produto.html')
@@ -194,3 +197,37 @@ def delete_venda(venda_id):
     db.session.commit()
     flash('"{}" foi apagado com sucesso!'.format(venda.datahora))
     return redirect(url_for('index'))
+
+@app.route('/produtos/<int:produto_id>/edit', methods=('GET', 'POST'))
+def edit_produto(produto_id):
+    produto = get_produto(produto_id)
+
+    if request.method == 'POST':
+        descricao = request.form['descricao']
+        peso = request.form['peso']
+        volume = request.form['volume']
+        sabor = request.form['sabor']
+        valor_custo = request.form['valor_custo']
+        valor_venda = request.form['valor_venda']
+
+        if not descricao:
+            flash('Digite a descrição do produto!')
+        else:
+            produto.descricao = descricao
+            produto.peso = peso
+            produto.volume = volume
+            produto.sabor = sabor
+            produto.valor_custo = valor_custo
+            produto.valor_venda = valor_venda
+            db.session.commit()
+            return redirect(url_for('produtos'))
+
+    return render_template('edit_produto.html', produto=produto)
+
+@app.route('/produtos/<int:produto_id>/delete', methods=('POST',))
+def delete_produto(produto_id):
+    produto = get_produto(produto_id)
+    db.session.delete(produto)
+    db.session.commit()
+    flash('"{}" foi apagado com sucesso!'.format(produto.descricao))
+    return redirect(url_for('produtos'))

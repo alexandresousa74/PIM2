@@ -15,6 +15,7 @@ CREATE TABLE vendas (
     cliente TEXT NOT NULL,
     produto TEXT NOT NULL,
     qtde INTEGER NOT NULL,
+    valor_total TEXT NOT NULL,
     pago TEXT NOT NULL,
     entregue TEXT NOT NULL
 );

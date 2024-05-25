@@ -1,4 +1,3 @@
-import sqlite3
 import os, datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template, request, url_for, flash, redirect
@@ -25,6 +24,7 @@ class Vendas(db.Model):
     cliente = db.Column(db.String(80), nullable=False)
     produto = db.Column(db.String(30), nullable=False)
     qtde = db.Column(db.Integer, nullable=False)
+    valor_total = db.Column(db.String(10), nullable=False)
     pago = db.Column(db.String(10), nullable=False)
     entregue = db.Column(db.String(10), nullable=False)
 
@@ -107,13 +107,14 @@ def nova_venda():
         cliente = request.form['cliente']
         produto = request.form['produto']
         qtde = request.form['qtde']
+        valor_total = request.form['valor_total']
         pago = request.form['pago']
         entregue = request.form['entregue']
 
         if not cliente or not produto:
             flash('Digite o nome do cliente e do produto!')
         else:
-            venda = Vendas(cliente=cliente, produto=produto, qtde=qtde, pago=pago, entregue=entregue)
+            venda = Vendas(cliente=cliente, produto=produto, qtde=qtde, valor_total=valor_total, pago=pago, entregue=entregue)
             db.session.add(venda)
             db.session.commit()
             return redirect(url_for('index'))
@@ -174,6 +175,7 @@ def edit_venda(venda_id):
         cliente = request.form['cliente']
         produto = request.form['produto']
         qtde = request.form['qtde']
+        valor_total = request.form['valor_total']
         pago = request.form['pago']
         entregue = request.form['entregue']
 
@@ -183,6 +185,7 @@ def edit_venda(venda_id):
             venda.cliente=cliente
             venda.produto=produto
             venda.qtde=qtde
+            venda.valor_total=valor_total
             venda.pago=pago
             venda.entregue=entregue
             db.session.commit()

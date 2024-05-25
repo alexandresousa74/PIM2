@@ -5,6 +5,7 @@
     <p>Cliente: {{ venda['cliente'] }}</p>
     <p>Produto:  {{ venda['produto'] }}</p>
     <p>Quantidade:  {{ venda['qtde'] }}</p>
+    <p>Valor Total: {{ venda['valor_total'] }}</p>
     <p>Pago:  {{ venda['pago'] }}</p>
     <p>Entregue:  {{ venda['entregue'] }}</p>
     <a href="{{ url_for('edit_venda', venda_id=venda['id']) }}">
